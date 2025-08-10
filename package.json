@@ -1,7 +1,7 @@
 {
-  "name": "asir-group-website",
+  "name": "seen-group-website",
   "version": "1.0.0",
-  "description": "Asır Group - We Supply Your Growth - Corporate Website",
+  "description": "Seen Group - We Supply Your Growth - Corporate Website",
   "main": "index.html",
   "scripts": {
     "dev": "vercel dev",
@@ -9,13 +9,13 @@
     "start": "vercel dev"
   },
   "keywords": [
-    "asir-group",
+    "seen-group",
     "corporate",
     "website",
     "business",
     "supply-chain"
   ],
-  "author": "Asır Group",
+  "author": "Seen Group",
   "license": "MIT",
   "devDependencies": {
     "vercel": "^32.0.0"

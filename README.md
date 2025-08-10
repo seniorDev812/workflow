@@ -1,6 +1,6 @@
-# Asır Group - We Supply Your Growth
+# Seen Group - We Supply Your Growth
 
-A modern corporate website for Asır Group, built with HTML5, CSS3, and JavaScript.
+A modern corporate website for Seen Group, built with HTML5, CSS3, and JavaScript.
 
 ## 🚀 Quick Deploy to Vercel
 
@@ -18,7 +18,7 @@ A modern corporate website for Asır Group, built with HTML5, CSS3, and JavaScri
 
 3. **Follow the prompts:**
    - Link to existing project? → `N`
-   - Project name → `asir-group-website`
+   - Project name → `seen-group-website`
    - Directory → `./` (current directory)
    - Override settings? → `N`
 
@@ -30,7 +30,7 @@ A modern corporate website for Asır Group, built with HTML5, CSS3, and JavaScri
    git add .
    git commit -m "Initial commit"
    git branch -M main
-   git remote add origin https://github.com/yourusername/asir-group-website.git
+   git remote add origin https://github.com/yourusername/seen-group-website.git
    git push -u origin main
    ```
 
@@ -51,7 +51,7 @@ A modern corporate website for Asır Group, built with HTML5, CSS3, and JavaScri
 ## 📁 Project Structure
 
 ```
-asir-group-website/
+seen-group-website/
 ├── index.html                 # Main HTML file
 ├── assets/                    # All static assets
 │   ├── logo-white.png
@@ -133,4 +133,4 @@ MIT License - see LICENSE file for details.
 
 ---
 
-**Asır Group** - We Supply Your Growth since 2011
+**Seen Group** - We Supply Your Growth since 2011
