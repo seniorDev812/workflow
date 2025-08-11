@@ -51,18 +51,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const brandsInView = isElementInViewport(brandsField);
         const footerInView = isElementInViewport(footerField);
         
-        // Check if any of the target sections have been passed
-        const aboutPassed = hasPassedElement(aboutField);
-        const worldMapPassed = hasPassedElement(worldMapSection);
-        const brandsPassed = hasPassedElement(brandsField);
-        
         // Debug logging
         console.log('Banner in view:', bannerInView, 'About in view:', aboutInView, 'World Map in view:', worldMapInView, 'Brands in view:', brandsInView, 'Carousel in view:', carouselInView, 'Footer in view:', footerInView);
 
         // Apply background color if any of the target sections are visible
-        // and none of them have been completely passed
-        if ((aboutInView || worldMapInView || brandsInView) && 
-            !aboutPassed && !worldMapPassed && !brandsPassed && !bannerInView) {
+        // and banner is not visible
+        if ((aboutInView || worldMapInView || brandsInView) && !bannerInView) {
             headerBottom.style.backgroundColor = '#5f5f5f';
             headerBottom.style.transition = 'background-color 0.3s ease';
             console.log('Applied background color for:', {
@@ -70,10 +64,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 worldMap: worldMapInView,
                 brands: brandsInView
             });
-        } else if (bannerInView ) {
+        } else if (bannerInView) {
             // Return to transparent when banner-field is visible
             headerBottom.style.backgroundColor = 'transparent';
             console.log('Applied transparent background for banner');
+        } else if (footerInView && !aboutInView && !worldMapInView && !brandsInView) {
+            // Return to transparent when footer is visible AND no target sections are visible
+            headerBottom.style.backgroundColor = 'transparent';
+            console.log('Applied transparent background for footer');
         } else {
             
             // If no specific conditions are met, keep the current state
