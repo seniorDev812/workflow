@@ -52,8 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const footerInView = isElementInViewport(footerField);
         
         // Debug logging
-        console.log('Banner in view:', bannerInView, 'About in view:', aboutInView, 'World Map in view:', worldMapInView, 'Brands in view:', brandsInView, 'Carousel in view:', carouselInView, 'Footer in view:', footerInView);
-
+  
         // Apply background color if any of the target sections are visible
         // and banner is not visible
         if ((aboutInView || worldMapInView || brandsInView) && !bannerInView) {
@@ -71,11 +70,11 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (footerInView && !aboutInView && !worldMapInView && !brandsInView) {
             // Return to transparent when footer is visible AND no target sections are visible
             headerBottom.style.backgroundColor = 'transparent';
-            console.log('Applied transparent background for footer');
+         
         } else {
             
             // If no specific conditions are met, keep the current state
-            console.log('No change to background');
+        
         }
     }
   
