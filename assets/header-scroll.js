@@ -1,5 +1,19 @@
 // Scroll-based header background color functionality
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Header scroll script loaded successfully');
+    
+    // Add CSS to ensure our styles take precedence
+    const style = document.createElement('style');
+    style.textContent = `
+        .header-bottom {
+            transition: background-color 0.3s ease !important;
+        }
+        .header-bottom[style*="background-color"] {
+            background-color: var(--header-bg-color) !important;
+        }
+    `;
+    document.head.appendChild(style);
+    
     const headerBottom = document.querySelector('.header-bottom');
     const bannerField = document.querySelector('.banner-field.relative.overflow-hidden.isolate');
     const carouselField = document.querySelector('.carousel-field.relative.w-full');
@@ -7,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const worldMapSection = document.querySelector('.world-map-section');
     const brandsField = document.querySelector('.brands-field');
     const footerField = document.querySelector('.footer-field');
+    
     // Debug element detection
     console.log('Elements found:', {
         headerBottom: !!headerBottom,
@@ -14,13 +29,16 @@ document.addEventListener('DOMContentLoaded', function() {
         carouselField: !!carouselField,
         aboutField: !!aboutField,
         worldMapSection: !!worldMapSection,
-        brandsField: !!brandsField
+        brandsField: !!brandsField,
+        footerField: !!footerField
     });
     
     if (!headerBottom) {
         console.log('Header bottom element not found');
         return;
     }
+    
+    console.log('Header scroll functionality initialized');
     
     // Function to check if element is in viewport
     function isElementInViewport(element) {
@@ -52,10 +70,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const footerInView = isElementInViewport(footerField);
         
         // Debug logging
-  
+        console.log('Scroll update - Banner in view:', bannerInView, 'About in view:', aboutInView, 'World Map in view:', worldMapInView, 'Brands in view:', brandsInView, 'Carousel in view:', carouselInView, 'Footer in view:', footerInView);
+
         // Apply background color if any of the target sections are visible
         // and banner is not visible
         if ((aboutInView || worldMapInView || brandsInView) && !bannerInView) {
+            headerBottom.style.setProperty('--header-bg-color', '#5f5f5f');
             headerBottom.style.backgroundColor = '#5f5f5f';
             headerBottom.style.transition = 'background-color 0.3s ease';
             console.log('Applied background color for:', {
@@ -65,16 +85,18 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         } else if (bannerInView) {
             // Return to transparent when banner-field is visible
+            headerBottom.style.setProperty('--header-bg-color', 'transparent');
             headerBottom.style.backgroundColor = 'transparent';
             console.log('Applied transparent background for banner');
         } else if (footerInView && !aboutInView && !worldMapInView && !brandsInView) {
             // Return to transparent when footer is visible AND no target sections are visible
+            headerBottom.style.setProperty('--header-bg-color', 'transparent');
             headerBottom.style.backgroundColor = 'transparent';
-         
+           
         } else {
             
             // If no specific conditions are met, keep the current state
-        
+            console.log('No change to background - Current state maintained');
         }
     }
   
