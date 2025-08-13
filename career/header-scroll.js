@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
          
             debugIndicator.style.background = 'rgba(95, 95, 95, 0.9)';
         } else if (isTransparent) {
-          \
+          
             debugIndicator.style.background = 'rgba(0, 0, 0, 0.8)';
         } else {
             debugIndicator.textContent = 'Header: Default';
