@@ -568,54 +568,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 // Add scroll indicator to show Lenis status
-function addScrollIndicator() {
-    // Create indicator element
-    const indicator = document.createElement('div');
-    indicator.id = 'scroll-indicator';
-    indicator.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 8px 12px;
-        border-radius: 4px;
-        font-size: 12px;
-        z-index: 10000;
-        cursor: pointer;
-        transition: opacity 0.3s ease;
-        opacity: 0.7;
-    `;
-    indicator.textContent = lenis ? 'Smooth Scroll: ON' : 'Smooth Scroll: OFF';
-    
-    // Add click handler to toggle
-    indicator.addEventListener('click', function() {
-        if (lenis) {
-            lenis.destroy();
-            lenis = null;
-            indicator.textContent = 'Smooth Scroll: OFF';
-        } else {
-            initLenis();
-            indicator.textContent = lenis ? 'Smooth Scroll: ON' : 'Smooth Scroll: OFF';
-        }
-    });
-    
-    // Add hover effect
-    indicator.addEventListener('mouseenter', function() {
-        indicator.style.opacity = '1';
-    });
-    
-    indicator.addEventListener('mouseleave', function() {
-        indicator.style.opacity = '0.7';
-    });
-    
-    // Hide indicator after 3 seconds
-    setTimeout(() => {
-        indicator.style.opacity = '0.3';
-    }, 3000);
-    
-    document.body.appendChild(indicator);
-}
+
 
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', initializeApp);
