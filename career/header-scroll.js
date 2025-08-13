@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
         z-index: 9999;
         transition: opacity 0.3s ease;
     `;
-    debugIndicator.textContent = 'Header: Transparent';
+
     document.body.appendChild(debugIndicator);
     
     // Update debug indicator
@@ -158,10 +158,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const isTransparent = headerBottom.classList.contains('bg-transparent');
         
         if (isActive) {
-            debugIndicator.textContent = 'Header: Active (Gray)';
+         
             debugIndicator.style.background = 'rgba(95, 95, 95, 0.9)';
         } else if (isTransparent) {
-            debugIndicator.textContent = 'Header: Transparent';
+          \
             debugIndicator.style.background = 'rgba(0, 0, 0, 0.8)';
         } else {
             debugIndicator.textContent = 'Header: Default';
