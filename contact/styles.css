@@ -1,7 +1,7 @@
 /* Lead Generation Form Styles */
 :root {
-    --primary-color: #13171F;
-    --primary-light: #2A2F3A;
+    --primary-color: #88BDF2;
+    --primary-light: #6BA5E8;
     --accent-color: #F6941E;
     --bg-primary: #FFFFFF;
     --bg-secondary: #F8F9FA;
@@ -12,7 +12,7 @@
     --border-color: #E5E7EB;
     --border-focus: #F6941E;
     --error-color: #EF4444;
-    --success-color: #10B981;
+    --success-color: #384959;
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
