@@ -17,7 +17,6 @@ const state = {
     filteredJobs: [],
     currentSlideIndex: 0,
     slideInterval: null,
-    lenis: null,
     isInitialized: false
 };
 
@@ -184,80 +183,7 @@ const displayMappings = {
     }
 };
 
-// Lenis Smooth Scrolling with better error handling
-class SmoothScroller {
-    constructor() {
-        this.lenis = null;
-        this.init();
-    }
 
-    init() {
-        // Check if user prefers reduced motion
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        
-        if (typeof Lenis !== 'undefined' && !prefersReducedMotion) {
-            try {
-                this.lenis = new Lenis({
-                    duration: 0.6,
-                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                    orientation: 'vertical',
-                    gestureOrientation: 'vertical',
-                    smoothWheel: true,
-                    wheelMultiplier: 1.5,
-                    smoothTouch: false,
-                    touchMultiplier: 2,
-                    infinite: false,
-                    lerp: 0.1,
-                });
-
-                this.startRAF();
-                this.addKeyboardShortcut();
-                
-                console.log('Lenis smooth scrolling initialized');
-            } catch (error) {
-                console.warn('Failed to initialize Lenis:', error);
-                this.lenis = null;
-            }
-        } else {
-            console.log('Lenis not available or reduced motion preferred');
-        }
-    }
-
-    startRAF() {
-        const raf = (time) => {
-            this.lenis.raf(time);
-            requestAnimationFrame(raf);
-        };
-        requestAnimationFrame(raf);
-    }
-
-    addKeyboardShortcut() {
-        document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'S') {
-                e.preventDefault();
-                if (this.lenis) {
-                    this.lenis.destroy();
-                    this.lenis = null;
-                    console.log('Lenis smooth scrolling disabled');
-                } else {
-                    this.init();
-                    console.log('Lenis smooth scrolling enabled');
-                }
-            }
-        });
-    }
-
-    scrollTo(target, options = {}) {
-        if (this.lenis) {
-            this.lenis.scrollTo(target, options);
-        } else {
-            window.scrollTo({ 
-                top: typeof target === 'number' ? target : target.offsetTop - CONFIG.SCROLL_OFFSET, 
-                behavior: 'smooth' 
-            });
-        }
-    }
-}
 
 // Job management system
 class JobManager {
@@ -449,10 +375,12 @@ class JobManager {
         this.displayJobs();
         this.displayPagination();
         
-        // Smooth scroll to jobs section
+        // Scroll to jobs section
         const targetElement = utils.getElement('#current-positions');
-        if (targetElement && state.lenis) {
-            state.lenis.scrollTo(targetElement.offsetTop - CONFIG.SCROLL_OFFSET, { duration: 1 });
+        if (targetElement) {
+            window.scrollTo({ 
+                top: targetElement.offsetTop - CONFIG.SCROLL_OFFSET
+            });
         }
     }
 
@@ -551,8 +479,10 @@ class JobManager {
     scrollToApplication() {
         this.closeModal();
         const contactSection = utils.getElement('#contact-section');
-        if (contactSection && state.lenis) {
-            state.lenis.scrollTo(contactSection, { duration: 1 });
+        if (contactSection) {
+            window.scrollTo({ 
+                top: contactSection.offsetTop - CONFIG.SCROLL_OFFSET
+            });
         }
     }
 
@@ -774,7 +704,6 @@ class FormHandler {
 // Main application class
 class CareerApp {
     constructor() {
-        this.scroller = null;
         this.jobManager = null;
         this.slider = null;
         this.formHandler = null;
@@ -783,13 +712,11 @@ class CareerApp {
     init() {
         try {
             // Initialize components
-            this.scroller = new SmoothScroller();
             this.jobManager = new JobManager();
             this.slider = new ImageSlider();
             this.formHandler = new FormHandler();
             
             // Set global references
-            state.lenis = this.scroller.lenis;
             state.isInitialized = true;
             
             // Bind global events
