@@ -391,88 +391,162 @@ class JobManager {
         const modal = utils.getElement('#job-modal');
         if (!modal) return;
 
-        const modalContent = modal.querySelector('.modal-content');
-        if (!modalContent) return;
+        // Update modal title
+        const modalTitle = modal.querySelector('.modal-title');
+        if (modalTitle) {
+            modalTitle.textContent = this.escapeHtml(job.title);
+        }
+
+        // Update meta badges
+        const locationBadge = modal.querySelector('.meta-badge.location span');
+        const typeBadge = modal.querySelector('.meta-badge.type span');
+        const departmentBadge = modal.querySelector('.meta-badge.department span');
         
-        modalContent.innerHTML = `
-            <div class="modal-header">
-                <h2>${this.escapeHtml(job.title)}</h2>
-                <button class="close-modal" onclick="jobManager.closeModal()" aria-label="Close modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="job-details-section">
-                    <h3>Job Overview</h3>
-                    <p>${this.escapeHtml(job.description)}</p>
+        if (locationBadge) locationBadge.textContent = displayMappings.locations[job.location] || job.location;
+        if (typeBadge) typeBadge.textContent = displayMappings.types[job.type] || job.type;
+        if (departmentBadge) departmentBadge.textContent = displayMappings.categories[job.department] || job.department;
+
+        // Update job description
+        const jobDescription = modal.querySelector('#modal-job-description');
+        if (jobDescription) {
+            jobDescription.innerHTML = `<p>${this.escapeHtml(job.description)}</p>`;
+        }
+
+        // Update requirements
+        const jobRequirements = modal.querySelector('#modal-job-requirements');
+        if (jobRequirements) {
+            jobRequirements.innerHTML = `<p>${this.escapeHtml(job.requirements)}</p>`;
+        }
+
+        // Update benefits
+        const jobBenefits = modal.querySelector('#modal-job-benefits');
+        if (jobBenefits) {
+            if (job.benefits && job.benefits.length > 0) {
+                jobBenefits.innerHTML = `<ul class="benefits-list">${job.benefits.map(benefit => `<li>${this.escapeHtml(benefit)}</li>`).join('')}</ul>`;
+            } else {
+                jobBenefits.innerHTML = '<p>Benefits information will be provided during the interview process.</p>';
+            }
+        }
+
+        // Update job details grid
+        const jobDetailsGrid = modal.querySelector('#modal-job-details');
+        if (jobDetailsGrid) {
+            jobDetailsGrid.innerHTML = `
+                <div class="detail-item">
+                    <strong>Department</strong>
+                    <span>${displayMappings.categories[job.department] || job.department}</span>
                 </div>
-                <div class="job-details-section">
-                    <h3>Requirements</h3>
-                    <p>${this.escapeHtml(job.requirements)}</p>
+                <div class="detail-item">
+                    <strong>Location</strong>
+                    <span>${displayMappings.locations[job.location] || job.location}</span>
                 </div>
-                <div class="job-details-section">
-                    <h3>Responsibilities</h3>
-                    <p>${this.escapeHtml(job.responsibilities)}</p>
+                <div class="detail-item">
+                    <strong>Type</strong>
+                    <span>${displayMappings.types[job.type] || job.type}</span>
                 </div>
-                ${job.skills ? `
-                <div class="job-details-section">
-                    <h3>Skills</h3>
-                    <div class="skills-list">
-                        ${job.skills.map(skill => `<span class="skill-tag">${this.escapeHtml(skill)}</span>`).join('')}
-                    </div>
+                <div class="detail-item">
+                    <strong>Salary</strong>
+                    <span>${this.escapeHtml(job.salary)}</span>
                 </div>
-                ` : ''}
-                ${job.benefits ? `
-                <div class="job-details-section">
-                    <h3>Benefits</h3>
-                    <ul class="benefits-list">
-                        ${job.benefits.map(benefit => `<li>${this.escapeHtml(benefit)}</li>`).join('')}
-                    </ul>
+                <div class="detail-item">
+                    <strong>Posted</strong>
+                    <span>${utils.formatDate(job.postedDate)}</span>
                 </div>
-                ` : ''}
-                <div class="job-details-grid">
-                    <div class="detail-item">
-                        <strong>Department:</strong>
-                        <span>${displayMappings.categories[job.department] || job.department}</span>
+            `;
+        }
+
+        // Add skills section if skills exist
+        const modalSections = modal.querySelector('.modal-sections');
+        if (modalSections && job.skills && job.skills.length > 0) {
+            // Check if skills section already exists
+            let skillsSection = modalSections.querySelector('.skills-section');
+            if (!skillsSection) {
+                skillsSection = document.createElement('div');
+                skillsSection.className = 'modal-section skills-section';
+                skillsSection.innerHTML = `
+                    <h3 class="section-title">
+                        <i class="fas fa-code"></i>
+                        Skills
+                    </h3>
+                    <div class="section-content">
+                        <div class="skills-list"></div>
                     </div>
-                    <div class="detail-item">
-                        <strong>Location:</strong>
-                        <span>${displayMappings.locations[job.location] || job.location}</span>
-                    </div>
-                    <div class="detail-item">
-                        <strong>Type:</strong>
-                        <span>${displayMappings.types[job.type] || job.type}</span>
-                    </div>
-                    <div class="detail-item">
-                        <strong>Salary:</strong>
-                        <span>${this.escapeHtml(job.salary)}</span>
-                    </div>
-                    <div class="detail-item">
-                        <strong>Posted:</strong>
-                        <span>${utils.formatDate(job.postedDate)}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="apply-btn" onclick="jobManager.scrollToApplication()">
-                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
-                    Apply Now
-                </button>
-                <button class="close-btn" onclick="jobManager.closeModal()">Close</button>
-            </div>
-        `;
+                `;
+                // Insert before the job details section
+                const jobDetailsSection = modalSections.querySelector('.modal-section:last-child');
+                if (jobDetailsSection) {
+                    modalSections.insertBefore(skillsSection, jobDetailsSection);
+                }
+            }
+            
+            const skillsList = skillsSection.querySelector('.skills-list');
+            if (skillsList) {
+                skillsList.innerHTML = job.skills.map(skill => `<span class="skill-tag">${this.escapeHtml(skill)}</span>`).join('');
+            }
+        } else {
+            // Remove skills section if it exists but no skills
+            const skillsSection = modalSections?.querySelector('.skills-section');
+            if (skillsSection) {
+                skillsSection.remove();
+            }
+        }
+
+        // Bind event listeners
+        this.bindModalEvents(modal);
 
         modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+        document.body.classList.add('modal-open');
         
         // Focus management for accessibility
         const firstFocusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
         if (firstFocusable) firstFocusable.focus();
     }
 
+    bindModalEvents(modal) {
+        // Close modal events
+        const closeButtons = modal.querySelectorAll('.modal-close, .modal-close-btn');
+        closeButtons.forEach(button => {
+            button.addEventListener('click', () => this.closeModal());
+        });
+
+        // Apply button event
+        const applyButton = modal.querySelector('.apply-btn');
+        if (applyButton) {
+            applyButton.addEventListener('click', () => this.scrollToApplication());
+        }
+
+        // Close on overlay click
+        const overlay = modal.querySelector('.modal-overlay');
+        if (overlay) {
+            overlay.addEventListener('click', () => this.closeModal());
+        }
+
+        // Prevent background scrolling when scrolling inside modal
+        const modalContent = modal.querySelector('.modal-content');
+        if (modalContent) {
+            modalContent.addEventListener('wheel', (e) => {
+                e.stopPropagation();
+            }, { passive: true });
+        }
+
+        const modalBody = modal.querySelector('.modal-body');
+        if (modalBody) {
+            modalBody.addEventListener('wheel', (e) => {
+                e.stopPropagation();
+            }, { passive: true });
+        }
+
+        // Prevent touch scrolling on background
+        modal.addEventListener('touchmove', (e) => {
+            e.stopPropagation();
+        }, { passive: true });
+    }
+
     closeModal() {
         const modal = utils.getElement('#job-modal');
         if (modal) {
             modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
+            document.body.classList.remove('modal-open');
         }
     }
 
