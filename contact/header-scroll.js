@@ -123,18 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Add visual indicator for debugging (remove in production)
         const debugIndicator = document.createElement('div');
-        debugIndicator.style.cssText = `
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            font-size: 12px;
-            z-index: 9999;
-            border-radius: 5px;
-            transition: opacity 0.3s ease;
-        `;
+     
         document.body.appendChild(debugIndicator);
         
         // Update debug indicator
