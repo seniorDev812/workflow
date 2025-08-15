@@ -448,9 +448,83 @@ function initializeTouchInteractions() {
     });
 }
 
+// Enhanced image loading and optimization
+function initializeImageOptimization() {
+    const images = document.querySelectorAll('.sei-product-img img, .sei-intro-image img');
+    
+    images.forEach(img => {
+        const container = img.closest('.sei-product-img, .sei-intro-image');
+        
+        // Add loading class
+        if (container) {
+            container.classList.add('loading');
+        }
+        
+        // Handle image load
+        img.addEventListener('load', function() {
+            if (container) {
+                container.classList.remove('loading');
+            }
+            // Add fade-in effect
+            this.style.opacity = '0';
+            this.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => {
+                this.style.opacity = '1';
+            }, 50);
+        });
+        
+        // Handle image error
+        img.addEventListener('error', function() {
+            if (container) {
+                container.classList.remove('loading');
+            }
+            // Show placeholder or error state
+            this.style.opacity = '0.5';
+            this.style.filter = 'grayscale(100%)';
+        });
+        
+        // Lazy loading for better performance
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                        }
+                        observer.unobserve(img);
+                    }
+                });
+            });
+            
+            imageObserver.observe(img);
+        }
+    });
+}
+
+// Enhanced responsive image handling
+function initializeResponsiveImages() {
+    const images = document.querySelectorAll('.sei-product-img img, .sei-intro-image img');
+    
+    images.forEach(img => {
+        // Add responsive image attributes
+        img.setAttribute('loading', 'lazy');
+        img.setAttribute('decoding', 'async');
+        
+        // Handle different screen densities
+        if (window.devicePixelRatio > 1) {
+            // For high DPI displays, we could load higher resolution images
+            // This is a placeholder for future enhancement
+        }
+    });
+}
+
 // Initialize touch interactions
 document.addEventListener('DOMContentLoaded', function() {
     initializeTouchInteractions();
+    initializeImageOptimization();
+    initializeResponsiveImages();
 });
 
 // Export functions for global access
