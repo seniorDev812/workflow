@@ -15,17 +15,11 @@ document.addEventListener('DOMContentLoaded', function() {
     document.head.appendChild(style);
     
     const headerBottom = document.querySelector('.header-bottom');
-    const seiHero = document.querySelector('.sei-hero');
-    const seiProductFilter = document.querySelector('.sei-product-filter');
-    const seiProductsIntro = document.querySelector('.sei-products-intro');
     const footerField = document.querySelector('.footer-field');
     
     // Debug element detection
     console.log('Elements found:', {
         headerBottom: !!headerBottom,
-        seiHero: !!seiHero,
-        seiProductFilter: !!seiProductFilter,
-        seiProductsIntro: !!seiProductsIntro,
         footerField: !!footerField
     });
     
@@ -33,8 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Header bottom element not found');
         return;
     }
-    
-    console.log('Header scroll functionality initialized');
     
     // Function to check if element is in viewport
     function isElementInViewport(element) {
@@ -46,68 +38,77 @@ document.addEventListener('DOMContentLoaded', function() {
         );
     }
     
-    // Function to check if element has been passed (completely out of view)
-    function hasPassedElement(element) {
-        if (!element) return false;
-        const rect = element.getBoundingClientRect();
-        return rect.bottom < 0;
-    }
-    
     // Function to update header background
     function updateHeaderBackground() {
-        // Check if sei-hero is visible
-        const seiHeroInView = isElementInViewport(seiHero);
-        
-        // Check if any of the target sections are visible
-        const productFilterInView = isElementInViewport(seiProductFilter);
-        const productsIntroInView = isElementInViewport(seiProductsIntro);
+        // Check if footer is visible
         const footerInView = isElementInViewport(footerField);
         
         // Debug logging
-        console.log('Scroll update - SEI Hero in view:', seiHeroInView, 'Product Filter in view:', productFilterInView, 'Products Intro in view:', productsIntroInView, 'Footer in view:', footerInView);
+        console.log('Scroll update - Footer in view:', footerInView);
 
-        // Apply background color if any of the target sections are visible
-        // and sei-hero is not visible
-        if ((productFilterInView || productsIntroInView) && !seiHeroInView) {
+        // Apply background color based on footer visibility
+        if (footerInView) {
+            // Transparent when footer is visible
+            headerBottom.style.setProperty('--header-bg-color', 'transparent');
+            headerBottom.style.backgroundColor = 'transparent';
+            headerBottom.style.transition = 'background-color 0.3s ease';
+            console.log('Applied transparent background for footer');
+        } else {
+            // Gray background for all other cases
             headerBottom.style.setProperty('--header-bg-color', '#5f5f5f');
             headerBottom.style.backgroundColor = '#5f5f5f';
             headerBottom.style.transition = 'background-color 0.3s ease';
-            console.log('Applied background color for:', {
-                productFilter: productFilterInView,
-                productsIntro: productsIntroInView
-            });
-        } else if (seiHeroInView) {
-            // Return to transparent when sei-hero is visible
-            headerBottom.style.setProperty('--header-bg-color', 'transparent');
-            headerBottom.style.backgroundColor = 'transparent';
-            console.log('Applied transparent background for sei-hero');
-        } else if (footerInView && !productFilterInView && !productsIntroInView) {
-            // Return to transparent when footer is visible AND no target sections are visible
-            headerBottom.style.setProperty('--header-bg-color', 'transparent');
-            headerBottom.style.backgroundColor = 'transparent';
-           
-        } else {
-            
-            // If no specific conditions are met, keep the current state
-            console.log('No change to background - Current state maintained');
+            console.log('Applied gray background for other sections');
         }
     }
   
-    
-    // Add scroll event listener with throttling for better performance
-    let ticking = false;
-    function requestTick() {
-        if (!ticking) {
-            requestAnimationFrame(function() {
-                updateHeaderBackground();
-                ticking = false;
-            });
-            ticking = true;
+    // Function to initialize scroll functionality after animations complete
+    function initializeScrollFunctionality() {
+        console.log('Header scroll functionality initialized after animations');
+        
+        // Add scroll event listener with throttling for better performance
+        let ticking = false;
+        function requestTick() {
+            if (!ticking) {
+                requestAnimationFrame(function() {
+                    updateHeaderBackground();
+                    ticking = false;
+                });
+                ticking = true;
+            }
         }
+        
+        window.addEventListener('scroll', requestTick);
+        
+        // Initial check
+        updateHeaderBackground();
     }
     
-    window.addEventListener('scroll', requestTick);
+    // Wait for all animations and moving operations to complete
+    // Method 1: Wait for window load event (images, stylesheets, etc.)
+    window.addEventListener('load', function() {
+        console.log('Window loaded, waiting for animations...');
+        
+        // Method 2: Additional delay to ensure all CSS animations complete
+        setTimeout(function() {
+            console.log('Animation delay completed, initializing scroll functionality');
+            initializeScrollFunctionality();
+        }, 2000); // 2 second delay to ensure all animations complete
+    });
     
-    // Initial check
-    updateHeaderBackground();
+    // Method 3: Alternative - wait for specific animation classes to be removed
+    // Uncomment if you have specific animation classes
+    /*
+    function waitForAnimations() {
+        const animatedElements = document.querySelectorAll('.animate, .moving, .logo-animation');
+        if (animatedElements.length === 0) {
+            console.log('No animation classes found, initializing immediately');
+            initializeScrollFunctionality();
+        } else {
+            console.log('Animation classes detected, waiting...');
+            setTimeout(waitForAnimations, 100);
+        }
+    }
+    waitForAnimations();
+    */
 });
