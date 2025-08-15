@@ -1,11 +1,14 @@
 // Contact Page - Scroll-based header background color functionality
-// Wait for page to be fully displayed after logo animation
+// Initialize immediately on DOM ready
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Contact page header scroll script loaded - waiting for page to be displayed');
+    console.log('Contact page header scroll script loaded - initializing immediately');
+    
+    // Initialize header scroll functionality immediately
+    initializeHeaderScroll();
     
     // Function to initialize header scroll functionality
     function initializeHeaderScroll() {
-        console.log('Contact page header scroll script initialized after page display');
+        console.log('Contact page header scroll script initialized');
         
         // Add CSS to ensure our styles take precedence
         const style = document.createElement('style');
@@ -146,62 +149,4 @@ document.addEventListener('DOMContentLoaded', function() {
             debugIndicator.style.opacity = '0.3';
         }, 5000);
     }
-    
-    // Function to check if page is fully displayed
-    function checkPageDisplayed() {
-        const preloader = document.querySelector('.preloader');
-        const mainField = document.querySelector('.main-field');
-        
-        // Check if preloader is hidden or not visible
-        const preloaderHidden = !preloader || 
-                               preloader.style.display === 'none' || 
-                               preloader.style.opacity === '0' ||
-                               preloader.classList.contains('is-stop');
-        
-        // Check if main content is visible and has content
-        const mainVisible = mainField && 
-                           mainField.offsetHeight > 0 && 
-                           mainField.style.display !== 'none' &&
-                           mainField.style.visibility !== 'hidden';
-        
-        // Check if body has active class (animation complete)
-        const bodyActive = document.body.classList.contains('active');
-        
-        console.log('Page display check:', {
-            preloaderHidden,
-            mainVisible,
-            bodyActive,
-            preloaderExists: !!preloader,
-            mainExists: !!mainField
-        });
-        
-        return preloaderHidden && mainVisible;
-    }
-    
-    // Wait for the page to be fully loaded
-    window.addEventListener('load', function() {
-        console.log('Page loaded, checking for page display');
-        
-        // Check periodically if page is displayed
-        function waitForPageDisplay() {
-            if (checkPageDisplayed()) {
-                console.log('Page is fully displayed, initializing header scroll');
-                initializeHeaderScroll();
-            } else {
-                // Check again in 200ms
-                setTimeout(waitForPageDisplay, 200);
-            }
-        }
-        
-        // Start checking
-        waitForPageDisplay();
-        
-        // Fallback: if page doesn't display within 10 seconds, initialize anyway
-        setTimeout(function() {
-            if (!checkPageDisplayed()) {
-                console.log('Page display timeout reached, initializing header scroll anyway');
-                initializeHeaderScroll();
-            }
-        }, 10000);
-    });
 });

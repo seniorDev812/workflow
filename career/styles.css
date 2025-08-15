@@ -1471,7 +1471,7 @@ body.modal-open {
 /* Ensure text colors work with background changes */
 .header-bottom.bg-active .menu-item-link span,
 .header-bottom.bg-active .language-flag .text,
-.header-bottom.bg-active .logo-field .logo-fill {
+.header-bottom.bg-active .logo-field-1 .logo-fill {
     color: #ffffff !important;
 }
 
