@@ -15,11 +15,13 @@ document.addEventListener('DOMContentLoaded', function() {
     document.head.appendChild(style);
     
     const headerBottom = document.querySelector('.header-bottom');
+    const seiProductFilter = document.querySelector('.sei-product-filter');
     const footerField = document.querySelector('.footer-field');
     
     // Debug element detection
     console.log('Elements found:', {
         headerBottom: !!headerBottom,
+        seiProductFilter: !!seiProductFilter,
         footerField: !!footerField
     });
     
@@ -40,25 +42,34 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to update header background
     function updateHeaderBackground() {
+        // Check if sei-product-filter is visible
+        const productFilterInView = isElementInViewport(seiProductFilter);
+        
         // Check if footer is visible
         const footerInView = isElementInViewport(footerField);
         
         // Debug logging
-        console.log('Scroll update - Footer in view:', footerInView);
+        console.log('Scroll update - Product Filter in view:', productFilterInView, 'Footer in view:', footerInView);
 
-        // Apply background color based on footer visibility
-        if (footerInView) {
+        // Apply background color based on section visibility
+        if (productFilterInView) {
+            // Gray background when sei-product-filter is visible
+            headerBottom.style.setProperty('--header-bg-color', '#5f5f5f');
+            headerBottom.style.backgroundColor = '#5f5f5f';
+            headerBottom.style.transition = 'background-color 0.3s ease';
+            console.log('Applied gray background for sei-product-filter section');
+        } else if (footerInView) {
             // Transparent when footer is visible
             headerBottom.style.setProperty('--header-bg-color', 'transparent');
             headerBottom.style.backgroundColor = 'transparent';
             headerBottom.style.transition = 'background-color 0.3s ease';
             console.log('Applied transparent background for footer');
         } else {
-            // Gray background for all other cases
+            // Default gray background for other sections
             headerBottom.style.setProperty('--header-bg-color', '#5f5f5f');
             headerBottom.style.backgroundColor = '#5f5f5f';
             headerBottom.style.transition = 'background-color 0.3s ease';
-            console.log('Applied gray background for other sections');
+            console.log('Applied default gray background for other sections');
         }
     }
   
